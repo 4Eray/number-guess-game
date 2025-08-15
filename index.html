@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>困难版数字猜谜（6次机会）</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: 'Arial Rounded MT Bold', sans-serif;
+            text-align: center;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            padding: 20px;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #ff6b6b;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 150px;
+            padding: 12px;
+            font-size: 18px;
+            border: 3px solid #ff6b6b;
+            border-radius: 10px;
+            margin: 10px;
+            text-align: center;
+        }
+        button {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        button:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+        }
+        #message {
+            font-size: 22px;
+            margin: 20px 0;
+            min-height: 30px;
+            color: #333;
+        }
+        #attempts {
+            font-weight: bold;
+            color: #ff6b6b;
+            font-size: 24px;
+        }
+        .hint {
+            font-style: italic;
+            color: #666;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔢 困难版数字猜谜 🔢</h1>
+        <p>猜一个1-100之间的数字，你只有 <span id="attempts">6</span> 次机会！</p>
+        
+        <input type="number" id="guessInput" placeholder="输入数字" min="1" max="100">
+        <button onclick="checkGuess()">猜一下</button>
+        
+        <div id="message"></div>
+        <button onclick="resetGame()" style="background:#4CAF50">重新开始</button>
+        
+        <p class="hint">提示：每次猜测后，我会告诉你偏高还是偏低</p>
+    </div>
+
+    <script>
+        let secretNumber = Math.floor(Math.random() * 100) + 1;
+        let attempts = 6;
+        
+        function checkGuess() {
+            const userGuess = parseInt(document.getElementById("guessInput").value);
+            const messageElement = document.getElementById("message");
+            const attemptsElement = document.getElementById("attempts");
+            
+            if (isNaN(userGuess) || userGuess < 1 || userGuess > 100) {
+                messageElement.textContent = "请输入1-100的有效数字！";
+                return;
+            }
+            
+            attempts--;
+            attemptsElement.textContent = attempts;
+            
+            if (userGuess === secretNumber) {
+                messageElement.innerHTML = "🎉 奇迹！你居然猜对了！🎉";
+                disableGame();
+            } else if (attempts <= 0) {
+                messageElement.innerHTML = `😭 游戏结束！正确答案是 <strong>${secretNumber}</strong>`;
+                disableGame();
+            } else if (userGuess < secretNumber) {
+                messageElement.innerHTML = `📉 太低了！还剩 ${attempts} 次机会`;
+            } else {
+                messageElement.innerHTML = `📈 太高了！还剩 ${attempts} 次机会`;
+            }
+            
+            document.getElementById("guessInput").value = "";
+        }
+        
+        function resetGame() {
+            secretNumber = Math.floor(Math.random() * 100) + 1;
+            attempts = 6;
+            document.getElementById("attempts").textContent = attempts;
+            document.getElementById("message").textContent = "";
+            document.getElementById("guessInput").disabled = false;
+            document.querySelector("button").disabled = false;
+        }
+        
+        function disableGame() {
+            document.getElementById("guessInput").disabled = true;
+            document.querySelector("button").disabled = true;
+        }
+    </script>
+</body>
+</html>
